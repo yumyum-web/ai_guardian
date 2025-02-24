@@ -1,5 +1,6 @@
 import 'package:ai_guardian/screens/onboarding_screen.dart';
 import 'package:ai_guardian/screens/signup_screen.dart';
+import 'package:ai_guardian/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,6 +10,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final AuthService _authService = AuthService();
+
   @override
   void initState() {
     super.initState();
@@ -30,10 +33,16 @@ class _SplashScreenState extends State<SplashScreen> {
         MaterialPageRoute(builder: (_) => OnboardingScreen()),
       );
     } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => SignUpScreen()),
-      );
+      _authService.authStateChanges.listen((user) {
+        if (!mounted) return;
+
+        if (user == null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => SignUpScreen()),
+          );
+        }
+      });
     }
   }
 

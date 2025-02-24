@@ -1,7 +1,18 @@
 import 'package:ai_guardian/screens/login_screen.dart';
+import 'package:ai_guardian/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  final AuthService _authService = AuthService();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,15 +42,53 @@ class SignUpScreen extends StatelessWidget {
               SizedBox(height: 24),
 
               // Input Fields
-              _buildTextField("Enter your full name"),
-              _buildTextField("Enter your email"),
-              _buildTextField("Enter password", obscureText: true),
-              _buildTextField("Confirm Password", obscureText: true),
+              AutofillGroup(
+                child: Column(
+                  children: [
+                    _buildTextField(
+                      "Enter your full name",
+                      _nameController,
+                      autofillHints: [AutofillHints.name],
+                    ),
+                    _buildTextField(
+                      "Enter your email",
+                      _emailController,
+                      autofillHints: [
+                        AutofillHints.username,
+                        AutofillHints.email,
+                      ],
+                    ),
+                    _buildTextField(
+                      "Enter password",
+                      _passwordController,
+                      autofillHints: [AutofillHints.password],
+                      obscureText: true,
+                    ),
+                  ],
+                ),
+              ),
               SizedBox(height: 20),
 
               // Register Button
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  String name = _nameController.text.trim();
+                  String email = _emailController.text.trim();
+                  String password = _passwordController.text.trim();
+
+                  if (name.isEmpty || email.isEmpty || password.isEmpty) {
+                    _showErrorMessage("Please fill in all fields");
+                    return;
+                  }
+
+                  try {
+                    await _authService.signUp(email, password);
+                  } catch (e) {
+                    if (!context.mounted) return;
+
+                    _showErrorMessage(e.toString());
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
                   foregroundColor: Colors.white,
@@ -83,7 +132,12 @@ class SignUpScreen extends StatelessWidget {
   }
 
   // Helper for text fields
-  Widget _buildTextField(String hintText, {bool obscureText = false}) {
+  Widget _buildTextField(
+    String hintText,
+    TextEditingController? controller, {
+    List<String>? autofillHints,
+    bool obscureText = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextField(
@@ -98,7 +152,15 @@ class SignUpScreen extends StatelessWidget {
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         ),
+        controller: controller,
+        autofillHints: autofillHints,
       ),
+    );
+  }
+
+  void _showErrorMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
     );
   }
 }

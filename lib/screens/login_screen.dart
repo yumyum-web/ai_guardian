@@ -1,7 +1,7 @@
-import 'package:ai_guardian/screens/login_screen.dart';
+import 'package:ai_guardian/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 
-class SignUpScreen extends StatelessWidget {
+class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,23 +18,19 @@ class SignUpScreen extends StatelessWidget {
 
               // Welcome Text
               Text(
-                "Welcome Onboard!",
+                "Welcome Back!",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 8),
-              Text(
-                "Your safety is our mission.\nTogether, let’s create a safer world for every woman.",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: Colors.grey),
-              ),
+              SizedBox(height: 24),
+
+              // Welcome Image
+              Image.asset('assets/images/login.png', height: 150),
               SizedBox(height: 24),
 
               // Input Fields
-              _buildTextField("Enter your full name"),
               _buildTextField("Enter your email"),
               _buildTextField("Enter password", obscureText: true),
-              _buildTextField("Confirm Password", obscureText: true),
               SizedBox(height: 20),
 
               // Register Button
@@ -48,7 +44,7 @@ class SignUpScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: Text("Register", style: TextStyle(fontSize: 16)),
+                child: Text("Sign In", style: TextStyle(fontSize: 16)),
               ),
               SizedBox(height: 16),
 
@@ -57,10 +53,10 @@ class SignUpScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 spacing: 4,
                 children: [
-                  Text("Already have an account?"),
+                  Text("Don’t have an account?"),
                   GestureDetector(
                     child: Text(
-                      "Sign In",
+                      "Sign Up",
                       style: TextStyle(
                         color: Colors.pinkAccent,
                         fontWeight: FontWeight.bold,
@@ -69,7 +65,7 @@ class SignUpScreen extends StatelessWidget {
                     onTap: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (_) => LoginScreen()),
+                        MaterialPageRoute(builder: (_) => SignUpScreen()),
                       );
                     },
                   ),

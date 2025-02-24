@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "380822701457",
+    "project_id": "ai-guardian-f091c",
+    "storage_bucket": "ai-guardian-f091c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:380822701457:android:c7e517a934cd00c5474630",
+        "android_client_info": {
+          "package_name": "com.aiguardian.ai_guardian"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDL_nvZuWbrH4QaSkWdEBVm5t97snDLdJg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

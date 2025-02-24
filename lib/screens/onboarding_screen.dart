@@ -1,3 +1,4 @@
+import 'package:ai_guardian/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingScreen extends StatelessWidget {
@@ -50,7 +51,12 @@ class OnboardingScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => SignUpScreen()),
+                    );
+                  },
                   child: Text(
                     "Get Started",
                     style: TextStyle(color: Colors.white, fontSize: 16),

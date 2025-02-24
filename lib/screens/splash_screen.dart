@@ -1,4 +1,5 @@
 import 'package:ai_guardian/screens/onboarding_screen.dart';
+import 'package:ai_guardian/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,7 +29,12 @@ class _SplashScreenState extends State<SplashScreen> {
         context,
         MaterialPageRoute(builder: (_) => OnboardingScreen()),
       );
-    } else {}
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => SignUpScreen()),
+      );
+    }
   }
 
   @override

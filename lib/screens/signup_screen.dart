@@ -1,5 +1,6 @@
 import 'package:ai_guardian/screens/login_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -82,7 +83,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   }
 
                   try {
-                    await _authService.signUp(email, password);
+                    User? user = await _authService.signUp(email, password);
+
+                    if (user != null) {
+                      await user.updateDisplayName(name);
+                      await user.updatePhotoURL(
+                        "https://ui-avatars.com/api/?background=FFF&color=A94064&size=128&name=${name.replaceAll(' ', '+')}",
+                      );
+                    }
                   } catch (e) {
                     if (!context.mounted) return;
 

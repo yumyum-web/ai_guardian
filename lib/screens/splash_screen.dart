@@ -1,3 +1,4 @@
+import 'package:ai_guardian/screens/dashboard_screen.dart';
 import 'package:ai_guardian/screens/onboarding_screen.dart';
 import 'package:ai_guardian/screens/signup_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
@@ -31,6 +32,8 @@ class _SplashScreenState extends State<SplashScreen> {
       _authService.authStateChanges.listen((user) {
         if (user == null) {
           _goToSignUp();
+        } else {
+          _goToDashboard();
         }
       });
     }
@@ -66,6 +69,13 @@ class _SplashScreenState extends State<SplashScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => SignUpScreen()),
+    );
+  }
+
+  void _goToDashboard() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => DashboardScreen()),
     );
   }
 }

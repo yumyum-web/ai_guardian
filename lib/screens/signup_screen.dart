@@ -1,3 +1,4 @@
+import 'package:ai_guardian/screens/dashboard_screen.dart';
 import 'package:ai_guardian/screens/login_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -91,6 +92,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         "https://ui-avatars.com/api/?background=FFF&color=A94064&size=128&name=${name.replaceAll(' ', '+')}",
                       );
                     }
+
+                    _goToDashboard();
                   } catch (e) {
                     _showErrorMessage(e.toString());
                   }
@@ -171,6 +174,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => LoginScreen()),
+    );
+  }
+
+  void _goToDashboard() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => DashboardScreen()),
     );
   }
 }

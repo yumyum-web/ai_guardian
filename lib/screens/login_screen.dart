@@ -1,3 +1,4 @@
+import 'package:ai_guardian/screens/dashboard_screen.dart';
 import 'package:ai_guardian/screens/signup_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
 import 'package:flutter/material.dart';
@@ -74,6 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   try {
                     await _authService.signIn(email, password);
+                    _goToDashboard();
                   } catch (e) {
                     _showErrorMessage(e.toString());
                   }
@@ -157,4 +159,10 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  void _goToDashboard() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => DashboardScreen()),
+    );
+  }
 }

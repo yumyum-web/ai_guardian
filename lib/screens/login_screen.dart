@@ -105,10 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     onTap: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (_) => SignUpScreen()),
-                      );
+                      _goToSignUp();
                     },
                   ),
                 ],
@@ -152,4 +149,12 @@ class _LoginScreenState extends State<LoginScreen> {
       SnackBar(content: Text(message), backgroundColor: Colors.red),
     );
   }
+
+  void _goToSignUp() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => SignUpScreen()),
+    );
+  }
+
 }

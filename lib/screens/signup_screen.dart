@@ -92,8 +92,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       );
                     }
                   } catch (e) {
-                    if (!context.mounted) return;
-
                     _showErrorMessage(e.toString());
                   }
                 },
@@ -124,10 +122,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                     onTap: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (_) => LoginScreen()),
-                      );
+                      _goToLogin();
                     },
                   ),
                 ],
@@ -169,6 +164,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void _showErrorMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message), backgroundColor: Colors.red),
+    );
+  }
+
+  void _goToLogin() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => LoginScreen()),
     );
   }
 }

@@ -24,23 +24,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
     await Future.delayed(Duration(seconds: 2)); // Cosmetic splash delay
 
-    if (!mounted) return;
-
     if (firstTime) {
       prefs.setBool('first_time', false);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => OnboardingScreen()),
-      );
+      _goToOnboarding();
     } else {
       _authService.authStateChanges.listen((user) {
-        if (!mounted) return;
-
         if (user == null) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => SignUpScreen()),
-          );
+          _goToSignUp();
         }
       });
     }
@@ -62,6 +52,20 @@ class _SplashScreenState extends State<SplashScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  void _goToOnboarding() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => OnboardingScreen()),
+    );
+  }
+
+  void _goToSignUp() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => SignUpScreen()),
     );
   }
 }

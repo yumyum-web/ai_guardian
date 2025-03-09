@@ -71,7 +71,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               SizedBox(height: 20),
 
-              // Register Button
+              // Sign Up Button
               ElevatedButton(
                 onPressed: () async {
                   String name = _nameController.text.trim();
@@ -110,7 +110,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               SizedBox(height: 16),
 
-              // Sign In prompt
+              // Log In prompt
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 spacing: 4,
@@ -118,7 +118,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Text("Already have an account?"),
                   GestureDetector(
                     child: Text(
-                      "Sign In",
+                      "Log In",
                       style: TextStyle(
                         color: Colors.pinkAccent,
                         fontWeight: FontWeight.bold,

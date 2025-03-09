@@ -62,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: 20),
 
-              // Register Button
+              // Log In Button
               ElevatedButton(
                 onPressed: () async {
                   String email = _emailController.text.trim();
@@ -88,11 +88,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: Text("Sign In", style: TextStyle(fontSize: 16)),
+                child: Text("Log In", style: TextStyle(fontSize: 16)),
               ),
               SizedBox(height: 16),
 
-              // Sign In prompt
+              // Sign Up prompt
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 spacing: 4,

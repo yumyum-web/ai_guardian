@@ -1,6 +1,9 @@
+import 'package:ai_guardian/enums/role_enum.dart';
+import 'package:ai_guardian/models/user_model.dart';
 import 'package:ai_guardian/screens/dashboard_screen.dart';
 import 'package:ai_guardian/screens/login_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
+import 'package:ai_guardian/services/users_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -11,9 +14,11 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final AuthService _authService = AuthService();
+  final UsersService _usersService = UsersService();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  RoleEnum? _selectedRole;
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +71,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       autofillHints: [AutofillHints.password],
                       obscureText: true,
                     ),
+                    _buildDropdownField(
+                      "Account Type",
+                      RoleEnum.values,
+                      _selectedRole,
+                      (RoleEnum? value) {
+                        setState(() {
+                          _selectedRole = value;
+                        });
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -78,7 +93,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   String email = _emailController.text.trim();
                   String password = _passwordController.text.trim();
 
-                  if (name.isEmpty || email.isEmpty || password.isEmpty) {
+                  if (name.isEmpty || email.isEmpty || password.isEmpty || _selectedRole == null) {
                     _showErrorMessage("Please fill in all fields");
                     return;
                   }
@@ -91,6 +106,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       await user.updatePhotoURL(
                         "https://ui-avatars.com/api/?background=FFF&color=A94064&size=128&name=${name.replaceAll(' ', '+')}",
                       );
+
+                      try {
+                        await _usersService.addUser(UserModel(
+                          id: user.uid,
+                          name: name,
+                          email: email,
+                          role: _selectedRole!,
+                        ));
+                      } catch (e) {
+                        await user.delete();
+                        rethrow;
+                      }
                     }
 
                     _goToDashboard();
@@ -160,6 +187,44 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         controller: controller,
         autofillHints: autofillHints,
+      ),
+    );
+  }
+
+  // Helper for select fields (Dropdown)
+  Widget _buildDropdownField<T>(
+    String hintText,
+    List<T> items,
+    T? selectedValue,
+    void Function(T?) onChanged,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: InputDecorator(
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.grey[200],
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        ),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<T>(
+            hint: Text(hintText, style: TextStyle(color: Colors.black54)),
+            value: selectedValue,
+            isExpanded: true,
+            items:
+                items.map((T item) {
+                  return DropdownMenuItem<T>(
+                    value: item,
+                    child: Text(item.toString()),
+                  );
+                }).toList(),
+            onChanged: onChanged,
+          ),
+        ),
       ),
     );
   }

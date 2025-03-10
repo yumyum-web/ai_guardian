@@ -22,64 +22,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
             padding: EdgeInsets.all(20),
             decoration: BoxDecoration(color: Theme.of(context).primaryColor),
             width: double.infinity,
-            child: Column(
-              children: [
-                SizedBox(height: 40),
-                CircleAvatar(
-                  radius: 40,
-                  backgroundImage: CachedNetworkImageProvider(
-                    user?.photoURL ?? '',
-                  ),
-                ),
-                SizedBox(height: 30),
-                Text(
-                  "Welcome, ${user?.displayName ?? 'User'}",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                SizedBox(height: 30),
-                // Counter with button
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 5,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 5,
-                            offset: Offset(2, 2),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        spacing: 4,
-                        children: [
-                          Text(
-                            "2", // Placeholder number
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Icon(Icons.arrow_back_ios, size: 16),
-                        ],
-                      ),
+            child: Padding(
+              padding: const EdgeInsets.all(30),
+              child: Column(
+                spacing: 30,
+                children: [
+                  CircleAvatar(
+                    radius: 40,
+                    backgroundImage: CachedNetworkImageProvider(
+                      user?.photoURL ?? '',
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  Text(
+                    "Welcome, ${user?.displayName ?? 'User'}",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           // Dashboard Grid

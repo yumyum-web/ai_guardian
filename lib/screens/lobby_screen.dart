@@ -15,6 +15,11 @@ class LobbyScreen extends StatefulWidget {
 class _LobbyScreenState extends State<LobbyScreen> {
   final AuthService _authService = AuthService();
   User? user;
+  final List<String> messages = [
+    "Today, you take control of your destiny. You are unstoppable!",
+    "You are a warrior. You are a survivor. You are a champion!",
+    "You are a beacon of hope. You are a light in the darkness!",
+  ];
   final carouselItems = [
     ('assets/images/lobby_carousel_1.png', 'You are strong'),
     ('assets/images/lobby_carousel_2.png', 'You are brave'),
@@ -66,9 +71,9 @@ class _LobbyScreenState extends State<LobbyScreen> {
                     spacing: 10,
                     children: [
                       Text(
-                        "Today, you take control of your destiny. You are unstoppable!",
+                        messages[Random().nextInt(messages.length)],
                         style: TextStyle(
-                          fontSize: 22,
+                          fontSize: 32,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                           shadows: [Shadow(blurRadius: 3, color: Colors.black26)],

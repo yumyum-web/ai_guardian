@@ -1,4 +1,4 @@
-import 'package:ai_guardian/screens/dashboard_screen.dart';
+import 'package:ai_guardian/screens/lobby_screen.dart';
 import 'package:ai_guardian/screens/onboarding_screen.dart';
 import 'package:ai_guardian/screens/signup_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
         if (user == null) {
           _goToSignUp();
         } else {
-          _goToDashboard();
+          _goToLobby();
         }
       });
     }
@@ -72,10 +72,10 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  void _goToDashboard() {
+  void _goToLobby() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => DashboardScreen()),
+      MaterialPageRoute(builder: (_) => LobbyScreen()),
     );
   }
 }

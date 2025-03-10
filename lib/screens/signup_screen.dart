@@ -1,6 +1,6 @@
 import 'package:ai_guardian/enums/role_enum.dart';
 import 'package:ai_guardian/models/user_model.dart';
-import 'package:ai_guardian/screens/dashboard_screen.dart';
+import 'package:ai_guardian/screens/lobby_screen.dart';
 import 'package:ai_guardian/screens/login_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
 import 'package:ai_guardian/services/users_service.dart';
@@ -93,7 +93,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   String email = _emailController.text.trim();
                   String password = _passwordController.text.trim();
 
-                  if (name.isEmpty || email.isEmpty || password.isEmpty || _selectedRole == null) {
+                  if (name.isEmpty ||
+                      email.isEmpty ||
+                      password.isEmpty ||
+                      _selectedRole == null) {
                     _showErrorMessage("Please fill in all fields");
                     return;
                   }
@@ -108,19 +111,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       );
 
                       try {
-                        await _usersService.addUser(UserModel(
-                          id: user.uid,
-                          name: name,
-                          email: email,
-                          role: _selectedRole!,
-                        ));
+                        await _usersService.addUser(
+                          UserModel(
+                            id: user.uid,
+                            name: name,
+                            email: email,
+                            role: _selectedRole!,
+                          ),
+                        );
                       } catch (e) {
                         await user.delete();
                         rethrow;
                       }
                     }
 
-                    _goToDashboard();
+                    _goToLobby();
                   } catch (e) {
                     _showErrorMessage(e.toString());
                   }
@@ -245,10 +250,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  void _goToDashboard() {
+  void _goToLobby() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => DashboardScreen()),
+      MaterialPageRoute(builder: (_) => LobbyScreen()),
     );
   }
 }

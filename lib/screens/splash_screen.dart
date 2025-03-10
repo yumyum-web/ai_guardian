@@ -12,6 +12,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   final AuthService _authService = AuthService();
+  final SharedPreferencesAsync prefs = SharedPreferencesAsync();
 
   @override
   void initState() {
@@ -20,8 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> checkFirstTimeUser() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool firstTime = prefs.getBool('first_time') ?? true;
+    bool firstTime = (await prefs.getBool('first_time')) ?? true;
 
     await Future.delayed(Duration(seconds: 2)); // Cosmetic splash delay
 

@@ -1,7 +1,10 @@
+import 'package:ai_guardian/enums/role_enum.dart';
+import 'package:ai_guardian/screens/dashboard_screen.dart';
 import 'package:ai_guardian/screens/lobby_screen.dart';
 import 'package:ai_guardian/screens/onboarding_screen.dart';
 import 'package:ai_guardian/screens/signup_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
+import 'package:ai_guardian/services/users_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,6 +16,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   final AuthService _authService = AuthService();
   final SharedPreferencesAsync prefs = SharedPreferencesAsync();
+  final UsersService _usersService = UsersService();
 
   @override
   void initState() {
@@ -33,7 +37,13 @@ class _SplashScreenState extends State<SplashScreen> {
         if (user == null) {
           _goToSignUp();
         } else {
-          _goToLobby();
+          _usersService.user(user.uid).listen((user_) {
+            if (user_?.role == RoleEnum.valora) {
+              _goToLobby();
+            } else {
+              _goToDashboard();
+            }
+          });
         }
       });
     }
@@ -76,6 +86,13 @@ class _SplashScreenState extends State<SplashScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => LobbyScreen()),
+    );
+  }
+
+  void _goToDashboard() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => DashboardScreen()),
     );
   }
 }

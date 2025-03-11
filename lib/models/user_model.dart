@@ -16,7 +16,7 @@ class UserModel {
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       id: map['id'],
-      role: map['role'],
+      role: RoleEnum.values.firstWhere((role) => role.name == map['role']),
       name: map['name'],
       email: map['email'],
     );

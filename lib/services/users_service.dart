@@ -11,4 +11,14 @@ class UsersService {
       throw 'Failed to add user: $e';
     }
   }
+
+  Stream<UserModel?> user(String id) {
+    return _firestore.collection('users').doc(id).snapshots().map((snapshot) {
+      if (snapshot.exists) {
+        return UserModel.fromMap(snapshot.data()!);
+      } else {
+        return null;
+      }
+    });
+  }
 }

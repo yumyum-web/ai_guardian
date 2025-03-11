@@ -1,3 +1,4 @@
+import 'package:ai_guardian/screens/login_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,11 +16,49 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     User? user = _authService.getCurrentUser();
     return Scaffold(
+      drawer: Drawer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 32, 16, 16),
+              child: Text(
+                'PeerShip',
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: 36,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.exit_to_app),
+              title: Text('Sign Out'),
+              onTap: () async {
+                await _authService.signOut();
+                _goToLogin();
+              },
+            ),
+          ],
+        ),
+      ),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              color: Colors.white,
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
+      ),
       body: Column(
         children: [
           // Top section with profile and welcome message
           Container(
-            padding: EdgeInsets.all(20),
             decoration: BoxDecoration(color: Theme.of(context).primaryColor),
             width: double.infinity,
             child: Padding(
@@ -47,50 +86,45 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           // Dashboard Grid
           Expanded(
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: GridView(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 1,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                ),
-                children: [
-                  _buildDashboardTile(
-                    image: 'assets/images/dashboard_sos.png',
-                    label: "SOS",
-                    bgColor: Colors.red,
-                    textColor: Colors.white,
-                    onTap: () {},
-                  ),
-                  _buildDashboardTile(
-                    image: 'assets/images/dashboard_emergency_sms.png',
-                    label: "Emergency SMS",
-                    onTap: () {},
-                  ),
-                  _buildDashboardTile(
-                    image: 'assets/images/dashboard_help_bot.png',
-                    label: "Help Bot",
-                    onTap: () {},
-                  ),
-                  _buildDashboardTile(
-                    image: 'assets/images/dashboard_safe_shaker.png',
-                    label: "Safe Shaker",
-                    onTap: () {},
-                  ),
-                  _buildDashboardTile(
-                    image: 'assets/images/dashboard_track_me.png',
-                    label: "Track Me (Advanced)",
-                    onTap: () {},
-                  ),
-                  _buildDashboardTile(
-                    image: 'assets/images/dashboard_support.png',
-                    label: "Support",
-                    onTap: () {},
-                  ),
-                ],
+            child: GridView(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 1,
               ),
+              children: [
+                _buildDashboardTile(
+                  image: 'assets/images/dashboard_sos.png',
+                  label: "SOS",
+                  bgColor: Colors.red,
+                  textColor: Colors.white,
+                  onTap: () {},
+                ),
+                _buildDashboardTile(
+                  image: 'assets/images/dashboard_emergency_sms.png',
+                  label: "Emergency SMS",
+                  onTap: () {},
+                ),
+                _buildDashboardTile(
+                  image: 'assets/images/dashboard_help_bot.png',
+                  label: "Help Bot",
+                  onTap: () {},
+                ),
+                _buildDashboardTile(
+                  image: 'assets/images/dashboard_safe_shaker.png',
+                  label: "Safe Shaker",
+                  onTap: () {},
+                ),
+                _buildDashboardTile(
+                  image: 'assets/images/dashboard_track_me.png',
+                  label: "Track Me (Advanced)",
+                  onTap: () {},
+                ),
+                _buildDashboardTile(
+                  image: 'assets/images/dashboard_support.png',
+                  label: "Support",
+                  onTap: () {},
+                ),
+              ],
             ),
           ),
         ],
@@ -111,6 +145,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        margin: EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(15),
@@ -139,6 +174,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  void _goToLogin() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => LoginScreen()),
     );
   }
 }

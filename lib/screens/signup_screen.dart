@@ -118,6 +118,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             name: name,
                             email: email,
                             role: _selectedRole!,
+                            valoras: [],
                           ),
                         );
                       } catch (e) {

@@ -35,4 +35,17 @@ class UsersService {
       throw 'Failed to get user: $e';
     }
   }
+
+  Stream<List<UserModel>> getValoras(String id) {
+    return _firestore
+        .collection('users')
+        .where('guardians', arrayContains: id)
+        .snapshots()
+        .map(
+          (snapshot) =>
+              snapshot.docs
+                  .map((doc) => UserModel.fromMap(doc.data()))
+                  .toList(),
+        );
+  }
 }

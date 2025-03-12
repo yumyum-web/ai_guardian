@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:ai_guardian/models/location_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -51,5 +52,16 @@ class LocationService {
 
   Stream<bool> get isSharingLocation {
     return _sharingController.stream;
+  }
+
+  Stream<LocationModel?> location(String uid) {
+    return _firestore.collection('locations').doc(uid).snapshots().map((
+      snapshot,
+    ) {
+      if (!snapshot.exists) {
+        return null;
+      }
+      return LocationModel.fromMap(snapshot.data()!);
+    });
   }
 }

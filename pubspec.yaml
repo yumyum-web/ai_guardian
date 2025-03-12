@@ -20,6 +20,8 @@ dependencies:
   cloud_firestore: ^5.6.5
   carousel_slider: ^5.0.0
   geolocator: ^13.0.2
+  google_maps_flutter: ^2.10.1
+  get_time_ago: ^2.3.0
 
 dev_dependencies:
   flutter_test:
@@ -45,3 +47,4 @@ flutter:
     - assets/images/lobby_carousel_1.png
     - assets/images/lobby_carousel_2.png
     - assets/images/lobby_carousel_3.png
+    - assets/images/marker.png

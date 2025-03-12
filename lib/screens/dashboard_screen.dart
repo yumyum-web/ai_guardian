@@ -1,4 +1,5 @@
 import 'package:ai_guardian/enums/role_enum.dart';
+import 'package:ai_guardian/screens/locations_screen.dart';
 import 'package:ai_guardian/screens/login_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
 import 'package:ai_guardian/services/location_service.dart';
@@ -154,23 +155,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         label: "Track Me (Advanced)",
         bgColor: _isSharingLocation ? Colors.green : null,
         textColor: _isSharingLocation ? Colors.white : null,
-        onTap: () {
-          _showConfirmation(
-            "Location Sharing",
-            "Are you sure you want to ${_isSharingLocation ? 'stop' : 'start'} sharing your location?",
-            () {
-              if (_isSharingLocation) {
-                _locationService.stopSharing();
-              } else {
-                _locationService.startSharing(Duration(seconds: 5));
-              }
-              setState(() {
-                _isSharingLocation = !_isSharingLocation;
-              });
-            },
-            () {},
-          );
-        },
+        onTap: _goToLocations,
       ),
       DashboardTile(
         image: 'assets/images/dashboard_emergency_sms.png',
@@ -217,6 +202,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => LoginScreen()),
+    );
+  }
+
+  void _goToLocations() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => LocationsScreen()),
     );
   }
 }

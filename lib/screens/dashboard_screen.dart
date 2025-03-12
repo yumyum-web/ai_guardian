@@ -20,7 +20,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final LocationService _locationService = LocationService();
   User? user;
   bool _isSharingLocation = false;
-  List<DashboardTile> tiles = [];
+  RoleEnum role = RoleEnum.valora;
 
   @override
   void initState() {
@@ -30,11 +30,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _goToLogin();
       }
       _usersService.user(user!.uid).listen((userModel) {
+        if (userModel == null) {
+          _goToLogin();
+        }
         setState(() {
-          tiles = switch (userModel!.role) {
-            RoleEnum.valora => _getValoraTiles(),
-            RoleEnum.guardian => _getGuardianTiles(),
-          };
+          role = userModel!.role;
         });
       });
       setState(() {
@@ -89,7 +89,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
           },
         ),
       ),
-      body: Dashboard(user: user, tiles: tiles),
+      body: Dashboard(
+        user: user,
+        tiles: switch (role) {
+          RoleEnum.valora => _getValoraTiles(),
+          RoleEnum.guardian => _getGuardianTiles(),
+        },
+      ),
     );
   }
 

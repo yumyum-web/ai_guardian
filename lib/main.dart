@@ -6,11 +6,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 const textColor = Color(0xFF000000);
 const backgroundColor = Color(0xFFffffff);
-const primaryColor = Color(0xFFff4cb7);
+const primaryColor = Color(0xffff73c8);
 const primaryFgColor = Color(0xFF000000);
 const secondaryColor = Color(0xFFdedcff);
 const secondaryFgColor = Color(0xFF000000);
-const accentColor = Color(0xFFff21a5);
+const accentColor = Color(0xfffb2aa7);
 const accentFgColor = Color(0xFF000000);
 
 const colorScheme = ColorScheme(

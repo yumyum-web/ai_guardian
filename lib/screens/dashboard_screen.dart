@@ -75,12 +75,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
             decoration: BoxDecoration(color: Theme.of(context).primaryColor),
             width: double.infinity,
             child: Padding(
-              padding: const EdgeInsets.all(30),
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
               child: Column(
                 spacing: 30,
                 children: [
                   CircleAvatar(
-                    radius: 40,
+                    radius: 50,
                     backgroundImage: CachedNetworkImageProvider(
                       user?.photoURL ?? '',
                     ),
@@ -198,7 +198,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     required VoidCallback onTap,
   }) {
     bgColor ??= Theme.of(context).cardColor;
-    textColor ??= Theme.of(context).primaryColor;
 
     return GestureDetector(
       onTap: onTap,

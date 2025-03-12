@@ -1,6 +1,11 @@
+import 'package:ai_guardian/enums/role_enum.dart';
+import 'package:ai_guardian/models/user_model.dart';
+import 'package:ai_guardian/screens/dashboard_screen.dart';
 import 'package:ai_guardian/screens/lobby_screen.dart';
 import 'package:ai_guardian/screens/signup_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
+import 'package:ai_guardian/services/users_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -10,6 +15,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final AuthService _authService = AuthService();
+  final UsersService _usersService = UsersService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -74,8 +80,23 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
 
                   try {
-                    await _authService.signIn(email, password);
-                    _goToLobby();
+                    User? user = await _authService.signIn(email, password);
+                    if (user == null) {
+                      throw "Invalid credentials. Please try again.";
+                    }
+
+                    UserModel? userModel = await _usersService.getUser(
+                      user.uid,
+                    );
+                    if (userModel == null) {
+                      throw "Faulty user data. Please contact support.";
+                    }
+
+                    if (userModel.role == RoleEnum.valora) {
+                      _goToLobby();
+                    } else {
+                      _goToDashboard();
+                    }
                   } catch (e) {
                     _showErrorMessage(e.toString());
                   }
@@ -148,7 +169,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _showErrorMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Theme.of(context).colorScheme.error),
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Theme.of(context).colorScheme.error,
+      ),
     );
   }
 
@@ -163,6 +187,13 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => LobbyScreen()),
+    );
+  }
+
+  void _goToDashboard() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => DashboardScreen()),
     );
   }
 }

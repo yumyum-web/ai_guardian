@@ -21,4 +21,18 @@ class UsersService {
       }
     });
   }
+
+  Future<UserModel?> getUser(String id) async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> snapshot =
+          await _firestore.collection('users').doc(id).get();
+      if (snapshot.exists) {
+        return UserModel.fromMap(snapshot.data()!);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw 'Failed to get user: $e';
+    }
+  }
 }

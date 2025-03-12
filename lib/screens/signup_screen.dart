@@ -1,5 +1,6 @@
 import 'package:ai_guardian/enums/role_enum.dart';
 import 'package:ai_guardian/models/user_model.dart';
+import 'package:ai_guardian/screens/dashboard_screen.dart';
 import 'package:ai_guardian/screens/lobby_screen.dart';
 import 'package:ai_guardian/screens/login_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
@@ -123,9 +124,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         await user.delete();
                         rethrow;
                       }
-                    }
 
-                    _goToLobby();
+                      if (_selectedRole == RoleEnum.valora) {
+                        _goToLobby();
+                      } else {
+                        _goToDashboard();
+                      }
+                    }
                   } catch (e) {
                     _showErrorMessage(e.toString());
                   }
@@ -254,6 +259,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => LobbyScreen()),
+    );
+  }
+
+  void _goToDashboard() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => DashboardScreen()),
     );
   }
 }

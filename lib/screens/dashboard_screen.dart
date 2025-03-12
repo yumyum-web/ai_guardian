@@ -1,5 +1,6 @@
 import 'package:ai_guardian/screens/login_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
+import 'package:ai_guardian/services/location_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,18 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   final AuthService _authService = AuthService();
+  final LocationService _locationService = LocationService();
+  bool _isSharingLocation = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _locationService.isSharingLocation.listen((isSharing) {
+      setState(() {
+        _isSharingLocation = isSharing;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +130,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 _buildDashboardTile(
                   image: 'assets/images/dashboard_track_me.png',
                   label: "Track Me (Advanced)",
-                  onTap: () {},
+                  bgColor: _isSharingLocation ? Colors.green : null,
+                  textColor: _isSharingLocation ? Colors.white : null,
+                  onTap: () {
+                    _showConfirmation(
+                      "Location Sharing",
+                      "Are you sure you want to ${_isSharingLocation ? 'stop' : 'start'} sharing your location?",
+                      () {
+                        if (_isSharingLocation) {
+                          _locationService.stopSharing();
+                        } else {
+                          _locationService.startSharing(Duration(seconds: 5));
+                        }
+                        setState(() {
+                          _isSharingLocation = !_isSharingLocation;
+                        });
+                      },
+                      () {},
+                    );
+                  },
                 ),
                 _buildDashboardTile(
                   image: 'assets/images/dashboard_support.png',
@@ -129,6 +160,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> _showConfirmation(
+    String title,
+    String message,
+    VoidCallback onConfirm,
+    VoidCallback onCancel,
+  ) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: SingleChildScrollView(child: Text(message)),
+          actions: <Widget>[
+            TextButton(onPressed: () {
+              onCancel();
+              Navigator.of(context).pop();
+            }, child: const Text('Cancel')),
+            TextButton(onPressed: () {
+              onConfirm();
+              Navigator.of(context).pop();
+            }, child: const Text('Confirm')),
+          ],
+        );
+      },
     );
   }
 

@@ -19,6 +19,7 @@ dependencies:
   cached_network_image: ^3.4.1
   cloud_firestore: ^5.6.5
   carousel_slider: ^5.0.0
+  geolocator: ^13.0.2
 
 dev_dependencies:
   flutter_test:

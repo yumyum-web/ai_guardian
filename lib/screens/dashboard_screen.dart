@@ -1,6 +1,8 @@
+import 'package:ai_guardian/enums/role_enum.dart';
 import 'package:ai_guardian/screens/login_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
 import 'package:ai_guardian/services/location_service.dart';
+import 'package:ai_guardian/services/users_service.dart';
 import 'package:ai_guardian/widgets/dashboard.dart';
 import 'package:ai_guardian/widgets/dashboard_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,12 +15,31 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   final AuthService _authService = AuthService();
+  final UsersService _usersService = UsersService();
   final LocationService _locationService = LocationService();
+  User? user;
   bool _isSharingLocation = false;
+  List<DashboardTile> tiles = [];
 
   @override
   void initState() {
     super.initState();
+    _authService.authStateChanges.listen((user) {
+      if (user == null) {
+        _goToLogin();
+      }
+      _usersService.user(user!.uid).listen((userModel) {
+        setState(() {
+          tiles = switch (userModel!.role) {
+            RoleEnum.valora => _getValoraTiles(),
+            RoleEnum.guardian => _getGuardianTiles(),
+          };
+        });
+      });
+      setState(() {
+        this.user = user;
+      });
+    });
     _locationService.isSharingLocation.listen((isSharing) {
       setState(() {
         _isSharingLocation = isSharing;
@@ -28,7 +49,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    User? user = _authService.getCurrentUser();
     return Scaffold(
       drawer: Drawer(
         child: Column(
@@ -49,7 +69,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
               title: Text('Sign Out'),
               onTap: () async {
                 await _authService.signOut();
-                _goToLogin();
               },
             ),
           ],
@@ -69,62 +88,96 @@ class _DashboardScreenState extends State<DashboardScreen> {
           },
         ),
       ),
-      body: Dashboard(
-        user: user,
-        tiles: [
-          DashboardTile(
-            image: 'assets/images/dashboard_sos.png',
-            label: "SOS",
-            bgColor: Colors.red,
-            textColor: Colors.white,
-            onTap: () {},
-          ),
-          DashboardTile(
-            image: 'assets/images/dashboard_emergency_sms.png',
-            label: "Emergency SMS",
-            onTap: () {},
-          ),
-          DashboardTile(
-            image: 'assets/images/dashboard_help_bot.png',
-            label: "Help Bot",
-            onTap: () {},
-          ),
-          DashboardTile(
-            image: 'assets/images/dashboard_safe_shaker.png',
-            label: "Safe Shaker",
-            onTap: () {},
-          ),
-          DashboardTile(
-            image: 'assets/images/dashboard_track_me.png',
-            label: "Track Me (Advanced)",
-            bgColor: _isSharingLocation ? Colors.green : null,
-            textColor: _isSharingLocation ? Colors.white : null,
-            onTap: () {
-              _showConfirmation(
-                "Location Sharing",
-                "Are you sure you want to ${_isSharingLocation ? 'stop' : 'start'} sharing your location?",
-                () {
-                  if (_isSharingLocation) {
-                    _locationService.stopSharing();
-                  } else {
-                    _locationService.startSharing(Duration(seconds: 5));
-                  }
-                  setState(() {
-                    _isSharingLocation = !_isSharingLocation;
-                  });
-                },
-                () {},
-              );
-            },
-          ),
-          DashboardTile(
-            image: 'assets/images/dashboard_support.png',
-            label: "Support",
-            onTap: () {},
-          ),
-        ],
-      ),
+      body: Dashboard(user: user, tiles: tiles),
     );
+  }
+
+  List<DashboardTile> _getValoraTiles() {
+    return [
+      DashboardTile(
+        image: 'assets/images/dashboard_sos.png',
+        label: "SOS",
+        bgColor: Colors.red,
+        textColor: Colors.white,
+        onTap: () {},
+      ),
+      DashboardTile(
+        image: 'assets/images/dashboard_emergency_sms.png',
+        label: "Emergency SMS",
+        onTap: () {},
+      ),
+      DashboardTile(
+        image: 'assets/images/dashboard_help_bot.png',
+        label: "Help Bot",
+        onTap: () {},
+      ),
+      DashboardTile(
+        image: 'assets/images/dashboard_safe_shaker.png',
+        label: "Safe Shaker",
+        onTap: () {},
+      ),
+      DashboardTile(
+        image: 'assets/images/dashboard_track_me.png',
+        label: "Track Me (Advanced)",
+        bgColor: _isSharingLocation ? Colors.green : null,
+        textColor: _isSharingLocation ? Colors.white : null,
+        onTap: () {
+          _showConfirmation(
+            "Location Sharing",
+            "Are you sure you want to ${_isSharingLocation ? 'stop' : 'start'} sharing your location?",
+            () {
+              if (_isSharingLocation) {
+                _locationService.stopSharing();
+              } else {
+                _locationService.startSharing(Duration(seconds: 5));
+              }
+              setState(() {
+                _isSharingLocation = !_isSharingLocation;
+              });
+            },
+            () {},
+          );
+        },
+      ),
+      DashboardTile(
+        image: 'assets/images/dashboard_support.png',
+        label: "Support",
+        onTap: () {},
+      ),
+    ];
+  }
+
+  List<DashboardTile> _getGuardianTiles() {
+    return [
+      DashboardTile(
+        image: 'assets/images/dashboard_track_me.png',
+        label: "Track Me (Advanced)",
+        bgColor: _isSharingLocation ? Colors.green : null,
+        textColor: _isSharingLocation ? Colors.white : null,
+        onTap: () {
+          _showConfirmation(
+            "Location Sharing",
+            "Are you sure you want to ${_isSharingLocation ? 'stop' : 'start'} sharing your location?",
+            () {
+              if (_isSharingLocation) {
+                _locationService.stopSharing();
+              } else {
+                _locationService.startSharing(Duration(seconds: 5));
+              }
+              setState(() {
+                _isSharingLocation = !_isSharingLocation;
+              });
+            },
+            () {},
+          );
+        },
+      ),
+      DashboardTile(
+        image: 'assets/images/dashboard_emergency_sms.png',
+        label: "Emergency SMS",
+        onTap: () {},
+      ),
+    ];
   }
 
   Future<void> _showConfirmation(

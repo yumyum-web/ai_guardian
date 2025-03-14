@@ -1,6 +1,8 @@
 import 'package:ai_guardian/enums/role_enum.dart';
+import 'package:ai_guardian/screens/guardians_screen.dart';
 import 'package:ai_guardian/screens/locations_screen.dart';
 import 'package:ai_guardian/screens/login_screen.dart';
+import 'package:ai_guardian/screens/valoras_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
 import 'package:ai_guardian/services/location_service.dart';
 import 'package:ai_guardian/services/users_service.dart';
@@ -109,6 +111,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         onTap: () {},
       ),
       DashboardTile(
+        image: 'assets/images/dashboard_family.png',
+        label: "Guardians",
+        onTap: _goToGuardians,
+      ),
+      DashboardTile(
         image: 'assets/images/dashboard_emergency_sms.png',
         label: "Emergency SMS",
         onTap: () {},
@@ -164,6 +171,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         onTap: _goToLocations,
       ),
       DashboardTile(
+        image: 'assets/images/dashboard_family.png',
+        label: "Valoras",
+        onTap: _goToValoras,
+      ),
+      DashboardTile(
         image: 'assets/images/dashboard_emergency_sms.png',
         label: "Emergency SMS",
         onTap: () {},
@@ -216,5 +228,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       context,
       MaterialPageRoute(builder: (_) => LocationsScreen()),
     );
+  }
+
+  void _goToGuardians() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => GuardiansScreen()),
+    );
+  }
+
+  void _goToValoras() {
+    Navigator.push(context, MaterialPageRoute(builder: (_) => ValorasScreen()));
   }
 }

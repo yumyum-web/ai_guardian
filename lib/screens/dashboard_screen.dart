@@ -60,7 +60,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 32, 16, 16),
               child: Text(
-                'PeerShip',
+                'AI Guardian',
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontSize: 36,

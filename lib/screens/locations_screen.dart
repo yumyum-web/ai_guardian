@@ -2,6 +2,7 @@ import 'package:ai_guardian/models/user_model.dart';
 import 'package:ai_guardian/services/auth_service.dart';
 import 'package:ai_guardian/services/location_service.dart';
 import 'package:ai_guardian/services/users_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -12,7 +13,7 @@ class LocationsScreen extends StatefulWidget {
 }
 
 class _LocationsScreenState extends State<LocationsScreen> {
-  final AuthService _authService = AuthService();
+  final AuthService _authService = AuthService(FirebaseAuth.instance);
   final UsersService _usersService = UsersService();
   final LocationService _locationService = LocationService();
   List<UserModel> valoras = [];

@@ -14,7 +14,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final AuthService _authService = AuthService();
+  final AuthService _authService = AuthService(FirebaseAuth.instance);
   final UsersService _usersService = UsersService();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();

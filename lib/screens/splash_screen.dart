@@ -5,6 +5,7 @@ import 'package:ai_guardian/screens/onboarding_screen.dart';
 import 'package:ai_guardian/screens/signup_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
 import 'package:ai_guardian/services/users_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,7 +15,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  final AuthService _authService = AuthService();
+  final AuthService _authService = AuthService(FirebaseAuth.instance);
   final SharedPreferencesAsync prefs = SharedPreferencesAsync();
   final UsersService _usersService = UsersService();
 

@@ -17,7 +17,7 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  final AuthService _authService = AuthService();
+  final AuthService _authService = AuthService(FirebaseAuth.instance);
   final UsersService _usersService = UsersService();
   final LocationService _locationService = LocationService();
   User? user;

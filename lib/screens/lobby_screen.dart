@@ -13,7 +13,7 @@ class LobbyScreen extends StatefulWidget {
 }
 
 class _LobbyScreenState extends State<LobbyScreen> {
-  final AuthService _authService = AuthService();
+  final AuthService _authService = AuthService(FirebaseAuth.instance);
   User? user;
   final List<String> messages = [
     "Today, you take control of your destiny. You are unstoppable!",
@@ -51,17 +51,10 @@ class _LobbyScreenState extends State<LobbyScreen> {
         children: [
           // Top Section
           Container(
-            padding: EdgeInsets.only(
-              top: 50,
-              left: 20,
-              right: 20,
-              bottom: 30,
-            ),
+            padding: EdgeInsets.only(top: 50, left: 20, right: 20, bottom: 30),
             decoration: BoxDecoration(
               color: Theme.of(context).primaryColor,
-              borderRadius: BorderRadius.vertical(
-                bottom: Radius.circular(25),
-              ),
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(25)),
             ),
             child: Row(
               children: [
@@ -76,15 +69,14 @@ class _LobbyScreenState extends State<LobbyScreen> {
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
-                          shadows: [Shadow(blurRadius: 3, color: Colors.black26)],
+                          shadows: [
+                            Shadow(blurRadius: 3, color: Colors.black26),
+                          ],
                         ),
                       ),
                       Text(
                         "Welcome, $name",
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                        ),
+                        style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ],
                   ),
@@ -137,7 +129,10 @@ class _LobbyScreenState extends State<LobbyScreen> {
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                     shadows: [
-                                      Shadow(blurRadius: 2, color: Colors.black),
+                                      Shadow(
+                                        blurRadius: 2,
+                                        color: Colors.black,
+                                      ),
                                     ],
                                   ),
                                 ),

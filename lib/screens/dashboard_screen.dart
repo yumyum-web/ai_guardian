@@ -8,8 +8,10 @@ import 'package:ai_guardian/services/location_service.dart';
 import 'package:ai_guardian/services/users_service.dart';
 import 'package:ai_guardian/widgets/dashboard.dart';
 import 'package:ai_guardian/widgets/dashboard_tile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -19,7 +21,11 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   final AuthService _authService = AuthService(FirebaseAuth.instance);
   final UsersService _usersService = UsersService();
-  final LocationService _locationService = LocationService();
+  final LocationService _locationService = LocationService(
+    FirebaseFirestore.instance,
+    FirebaseAuth.instance,
+    GeolocatorPlatform.instance
+  );
   User? user;
   bool _isSharingLocation = false;
   RoleEnum role = RoleEnum.valora;

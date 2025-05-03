@@ -5,16 +5,19 @@ import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LocationService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _auth;
+  final GeolocatorPlatform _geolocator;
   Timer? _timer;
   final StreamController<bool> _sharingController =
       StreamController<bool>.broadcast();
 
+  LocationService(this._firestore, this._auth, this._geolocator);
+
   Future<void> checkPermission() async {
-    LocationPermission permission = await Geolocator.checkPermission();
+    LocationPermission permission = await _geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
+      permission = await _geolocator.requestPermission();
     }
     if (permission == LocationPermission.deniedForever) {
       throw 'Location permission denied forever';
@@ -22,7 +25,7 @@ class LocationService {
   }
 
   Future<LocationPermission> getPermissionStatus() async {
-    return await Geolocator.checkPermission();
+    return await _geolocator.checkPermission();
   }
 
   Future<void> startSharing(Duration delay) async {
@@ -32,10 +35,14 @@ class LocationService {
     if (user == null) {
       throw 'User not signed in';
     }
+    print(_firestore.collection("locations"));
+    print(_firestore.collection('locations').doc("testUid"));
     _sharingController.add(true);
     _timer = Timer.periodic(delay, (timer) async {
-      Position position = await Geolocator.getCurrentPosition();
+      Position position = await _geolocator.getCurrentPosition();
       String uid = user.uid;
+      print(_firestore);
+      print(_firestore.collection('locations').doc("testUid"));
 
       await _firestore.collection('locations').doc(uid).set({
         'timestamp': FieldValue.serverTimestamp(),

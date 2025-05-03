@@ -8,7 +8,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 class GuardiansScreen extends StatelessWidget {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String uid = FirebaseAuth.instance.currentUser!.uid;
-  final UsersService _usersService = UsersService();
+  final UsersService _usersService = UsersService(FirebaseFirestore.instance);
 
   Future<void> _removeGuardian(String guardianId) async {
     await _firestore.collection('users').doc(uid).update({

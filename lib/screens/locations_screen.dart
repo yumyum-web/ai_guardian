@@ -16,7 +16,7 @@ class LocationsScreen extends StatefulWidget {
 
 class _LocationsScreenState extends State<LocationsScreen> {
   final AuthService _authService = AuthService(FirebaseAuth.instance);
-  final UsersService _usersService = UsersService();
+  final UsersService _usersService = UsersService(FirebaseFirestore.instance);
   final LocationService _locationService = LocationService(
     FirebaseFirestore.instance,
     FirebaseAuth.instance,

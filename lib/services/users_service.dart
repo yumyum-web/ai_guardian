@@ -2,7 +2,9 @@ import 'package:ai_guardian/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UsersService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore;
+
+  UsersService(this._firestore);
 
   Future<void> addUser(UserModel user) async {
     try {

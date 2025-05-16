@@ -5,7 +5,6 @@ import 'package:ai_guardian/services/users_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -20,7 +19,6 @@ class _LocationsScreenState extends State<LocationsScreen> {
   final LocationService _locationService = LocationService(
     FirebaseFirestore.instance,
     FirebaseAuth.instance,
-    GeolocatorPlatform.instance,
   );
   List<UserModel> valoras = [];
   Set<Marker> markers = {};

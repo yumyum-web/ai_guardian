@@ -11,7 +11,6 @@ import 'package:ai_guardian/widgets/dashboard_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -24,7 +23,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final LocationService _locationService = LocationService(
     FirebaseFirestore.instance,
     FirebaseAuth.instance,
-    GeolocatorPlatform.instance
   );
   User? user;
   bool _isSharingLocation = false;
@@ -149,7 +147,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               if (_isSharingLocation) {
                 _locationService.stopSharing();
               } else {
-                _locationService.startSharing(Duration(seconds: 5));
+                _locationService.startSharing();
               }
               setState(() {
                 _isSharingLocation = !_isSharingLocation;

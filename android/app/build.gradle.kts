@@ -8,6 +8,10 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// flutter_background_geolocation
+val backgroundGeolocation = project(":flutter_background_geolocation")
+apply { from("${backgroundGeolocation.projectDir}/background_geolocation.gradle") }
+
 android {
     namespace = "com.aiguardian.ai_guardian"
     compileSdk = flutter.compileSdkVersion
@@ -33,6 +37,8 @@ android {
     buildTypes {
         release {
             signingConfig = signingConfigs.getByName("debug")
+            isMinifyEnabled = true
+            isShrinkResources = false   // <-- REQUIRED for flutter_background_geolocation
         }
     }
 }

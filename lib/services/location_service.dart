@@ -1,60 +1,67 @@
 import 'dart:async';
+
 import 'package:ai_guardian/models/location_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
+    as bg;
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LocationService {
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
-  final GeolocatorPlatform _geolocator;
-  Timer? _timer;
   final StreamController<bool> _sharingController =
       StreamController<bool>.broadcast();
 
-  LocationService(this._firestore, this._auth, this._geolocator);
-
-  Future<void> checkPermission() async {
-    LocationPermission permission = await _geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await _geolocator.requestPermission();
-    }
-    if (permission == LocationPermission.deniedForever) {
-      throw 'Location permission denied forever';
-    }
-  }
-
-  Future<LocationPermission> getPermissionStatus() async {
-    return await _geolocator.checkPermission();
-  }
-
-  Future<void> startSharing(Duration delay) async {
-    await checkPermission();
-    _timer?.cancel();
-    User? user = _auth.currentUser;
-    if (user == null) {
-      throw 'User not signed in';
-    }
-    print(_firestore.collection("locations"));
-    print(_firestore.collection('locations').doc("testUid"));
-    _sharingController.add(true);
-    _timer = Timer.periodic(delay, (timer) async {
-      Position position = await _geolocator.getCurrentPosition();
-      String uid = user.uid;
-      print(_firestore);
-      print(_firestore.collection('locations').doc("testUid"));
-
-      await _firestore.collection('locations').doc(uid).set({
-        'timestamp': FieldValue.serverTimestamp(),
-        'longitude': position.longitude,
-        'latitude': position.latitude,
+  LocationService(this._firestore, this._auth) {
+    bg.BackgroundGeolocation.state.then((bg.State? state) {
+      _sharingController.add(state?.enabled ?? false);
+      bg.BackgroundGeolocation.onEnabledChange((bool enabled) {
+        _sharingController.add(enabled);
+      });
+      bg.BackgroundGeolocation.onLocation((bg.Location location) async {
+        await shareLocation(
+          location.timestamp,
+          location.coords.longitude,
+          location.coords.latitude,
+        );
       });
     });
   }
 
+  Future<void> startBackgroundLocation() async {
+    await bg.BackgroundGeolocation.start();
+  }
+
+  Future<void> stopBackgroundLocation() async {
+    await bg.BackgroundGeolocation.stop();
+  }
+
+  Future<void> shareLocation(
+    String? timestamp,
+    double longitude,
+    double latitude,
+  ) async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw 'User not signed in';
+    }
+    await _firestore.collection('locations').doc(user.uid).set({
+      'timestamp': timestamp ?? FieldValue.serverTimestamp(),
+      'longitude': longitude,
+      'latitude': latitude,
+    });
+  }
+
+  Future<void> startSharing() async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw 'User not signed in';
+    }
+    await startBackgroundLocation();
+  }
+
   void stopSharing() {
-    _timer?.cancel();
-    _sharingController.add(false);
+    stopBackgroundLocation();
   }
 
   Stream<bool> get isSharingLocation {

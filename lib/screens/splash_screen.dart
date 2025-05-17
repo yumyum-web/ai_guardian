@@ -4,6 +4,7 @@ import 'package:ai_guardian/screens/lobby_screen.dart';
 import 'package:ai_guardian/screens/onboarding_screen.dart';
 import 'package:ai_guardian/screens/signup_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
+import 'package:ai_guardian/services/sos_service.dart';
 import 'package:ai_guardian/services/users_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,14 +20,21 @@ class _SplashScreenState extends State<SplashScreen> {
   final AuthService _authService = AuthService(FirebaseAuth.instance);
   final SharedPreferencesAsync prefs = SharedPreferencesAsync();
   final UsersService _usersService = UsersService(FirebaseFirestore.instance);
+  final SOSService _sosService = SOSService();
 
   @override
   void initState() {
     super.initState();
-    checkFirstTimeUser();
+    redirectUser();
   }
 
-  Future<void> checkFirstTimeUser() async {
+  Future<void> redirectUser() async {
+    bool isSOSActive = await _sosService.isSOSActive();
+    if (isSOSActive) {
+      _goToDashboard();
+      return;
+    }
+
     bool firstTime = (await prefs.getBool('first_time')) ?? true;
 
     await Future.delayed(Duration(seconds: 2)); // Cosmetic splash delay

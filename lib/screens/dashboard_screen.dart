@@ -3,9 +3,11 @@ import 'package:ai_guardian/screens/guardians_screen.dart';
 import 'package:ai_guardian/screens/locations_screen.dart';
 import 'package:ai_guardian/screens/login_screen.dart';
 import 'package:ai_guardian/screens/valoras_screen.dart';
+import 'package:ai_guardian/screens/sos_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
 import 'package:ai_guardian/services/location_service.dart';
 import 'package:ai_guardian/services/users_service.dart';
+import 'package:ai_guardian/services/sos_service.dart';
 import 'package:ai_guardian/widgets/dashboard.dart';
 import 'package:ai_guardian/widgets/dashboard_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -24,6 +26,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     FirebaseFirestore.instance,
     FirebaseAuth.instance,
   );
+  final SOSService _sosService = SOSService();
   User? user;
   bool _isSharingLocation = false;
   RoleEnum role = RoleEnum.valora;
@@ -35,13 +38,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
       if (user == null) {
         _goToLogin();
       }
-      _usersService.user(user!.uid).listen((userModel) {
+      _usersService.user(user!.uid).listen((userModel) async {
         if (userModel == null) {
           _goToLogin();
         }
         setState(() {
           role = userModel!.role;
         });
+        // Check SOS mode after user is loaded
+        if (await _sosService.isSOSActive()) {
+          _goToSOS();
+        }
       });
       setState(() {
         this.user = user;
@@ -110,9 +117,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       DashboardTile(
         image: 'assets/images/dashboard_sos.png',
         label: "SOS",
-        bgColor: Colors.red,
-        textColor: Colors.white,
-        onTap: () {},
+        onTap: _goToSOS,
       ),
       DashboardTile(
         image: 'assets/images/dashboard_family.png',
@@ -243,5 +248,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void _goToValoras() {
     Navigator.push(context, MaterialPageRoute(builder: (_) => ValorasScreen()));
+  }
+
+  void _goToSOS() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const SOSScreen()),
+    );
   }
 }

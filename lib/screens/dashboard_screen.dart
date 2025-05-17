@@ -2,6 +2,7 @@ import 'package:ai_guardian/enums/role_enum.dart';
 import 'package:ai_guardian/screens/guardians_screen.dart';
 import 'package:ai_guardian/screens/locations_screen.dart';
 import 'package:ai_guardian/screens/login_screen.dart';
+import 'package:ai_guardian/screens/safe_shaker_screen.dart';
 import 'package:ai_guardian/screens/valoras_screen.dart';
 import 'package:ai_guardian/screens/sos_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
@@ -137,7 +138,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       DashboardTile(
         image: 'assets/images/dashboard_safe_shaker.png',
         label: "Safe Shaker",
-        onTap: () {},
+        onTap: _goToSafeShaker,
       ),
       DashboardTile(
         image: 'assets/images/dashboard_track_me.png',
@@ -254,6 +255,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const SOSScreen()),
+    );
+  }
+
+  void _goToSafeShaker() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const SafeShakerScreen()),
     );
   }
 }

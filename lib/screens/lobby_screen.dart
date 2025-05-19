@@ -44,16 +44,16 @@ class _LobbyScreenState extends State<LobbyScreen> {
         'https://via.assets.so/img.jpg?w=400&h=400&tc=red&bg=white&t=Error';
 
     return Scaffold(
-      backgroundColor: Colors.pink,
+      backgroundColor: Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        spacing: 30,
+        spacing: 0,
         children: [
           // Top Section
           Container(
             padding: EdgeInsets.only(top: 50, left: 20, right: 20, bottom: 30),
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
+              color: Colors.pink,
               borderRadius: BorderRadius.vertical(bottom: Radius.circular(25)),
             ),
             child: Row(
@@ -63,20 +63,41 @@ class _LobbyScreenState extends State<LobbyScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     spacing: 10,
                     children: [
-                      Text(
-                        messages[Random().nextInt(messages.length)],
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          shadows: [
-                            Shadow(blurRadius: 3, color: Colors.black26),
-                          ],
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 12,
+                        ),
+                        child: Text(
+                          messages[Random().nextInt(messages.length)],
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            shadows: [
+                              Shadow(blurRadius: 3, color: Colors.black26),
+                            ],
+                          ),
                         ),
                       ),
-                      Text(
-                        "Welcome, $name",
-                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      SizedBox(height: 10),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 6,
+                          horizontal: 20,
+                        ),
+                        child: Text(
+                          "Welcome, $name",
+                          style: TextStyle(fontSize: 18, color: Colors.white),
+                        ),
                       ),
                     ],
                   ),
@@ -98,50 +119,104 @@ class _LobbyScreenState extends State<LobbyScreen> {
               color: Colors.white,
               padding: EdgeInsets.symmetric(vertical: 10),
               alignment: Alignment.center,
-              child: CarouselSlider(
-                options: CarouselOptions(
-                  height: 175,
-                  autoPlay: true,
-                  initialPage: Random().nextInt(3),
-                ),
-                items:
-                    carouselItems.map((item) {
-                      return Builder(
-                        builder: (BuildContext context) {
-                          return Stack(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(40),
-                                child: Image.asset(
-                                  item.$1,
-                                  fit: BoxFit.cover,
-                                  width: 300,
-                                  height: 175,
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                alignment: Alignment.bottomCenter,
-                                child: Text(
-                                  item.$2,
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    shadows: [
-                                      Shadow(
-                                        blurRadius: 2,
-                                        color: Colors.black,
+              child: Stack(
+                children: [
+                  // Static icons grid background
+                  Positioned.fill(
+                    child: Opacity(
+                      opacity: 0.12,
+                      child: GridView.count(
+                        crossAxisCount: 4,
+                        mainAxisSpacing: 64,
+                        crossAxisSpacing: 48,
+                        padding: EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: 30,
+                        ),
+                        physics: NeverScrollableScrollPhysics(),
+                        children: [
+                          Icon(Icons.shield, size: 40, color: Colors.pink),
+                          Icon(
+                            Icons.favorite,
+                            size: 40,
+                            color: Colors.redAccent,
+                          ),
+                          Icon(Icons.star, size: 40, color: Colors.amber),
+                          Icon(
+                            Icons.flash_on,
+                            size: 40,
+                            color: Colors.deepPurple,
+                          ),
+                          Icon(Icons.security, size: 40, color: Colors.blue),
+                          Icon(
+                            Icons.emoji_events,
+                            size: 40,
+                            color: Colors.green,
+                          ),
+                          Icon(Icons.lightbulb, size: 40, color: Colors.orange),
+                          Icon(
+                            Icons.directions_run,
+                            size: 40,
+                            color: Colors.teal,
+                          ),
+                          Icon(Icons.wb_sunny, size: 40, color: Colors.yellow),
+                          Icon(Icons.bolt, size: 40, color: Colors.purple),
+                          Icon(Icons.thumb_up, size: 40, color: Colors.cyan),
+                          Icon(Icons.public, size: 40, color: Colors.indigo),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // CarouselSlider in foreground
+                  Align(
+                    alignment: Alignment.center,
+                    child: CarouselSlider(
+                      options: CarouselOptions(
+                        height: 175,
+                        autoPlay: true,
+                        initialPage: Random().nextInt(3),
+                      ),
+                      items:
+                          carouselItems.map((item) {
+                            return Builder(
+                              builder: (BuildContext context) {
+                                return Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(40),
+                                      child: Image.asset(
+                                        item.$1,
+                                        fit: BoxFit.cover,
+                                        width: 300,
+                                        height: 175,
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    }).toList(),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.all(10),
+                                      alignment: Alignment.bottomCenter,
+                                      child: Text(
+                                        item.$2,
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          shadows: [
+                                            Shadow(
+                                              blurRadius: 10,
+                                              color: Colors.black,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }).toList(),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

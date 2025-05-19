@@ -16,6 +16,10 @@ class GeolocationService {
     });
   }
 
+  Future<bg.Location> currentLocation() {
+    return bg.BackgroundGeolocation.getCurrentPosition();
+  }
+
   Future<void> startMonitoring() async {
     if (_isMonitoring) {
       return;

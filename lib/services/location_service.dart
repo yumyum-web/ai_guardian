@@ -95,6 +95,16 @@ class LocationService {
       _geolocationService.removeLocationCallback(callback);
       controller.close();
     };
+
+    _geolocationService
+        .currentLocation()
+        .then((location) {
+          controller.add(location);
+        })
+        .catchError((error) {
+          print('Error getting initial self location: $error');
+        });
+
     return controller.stream;
   }
 }

@@ -1,19 +1,18 @@
-import 'package:ai_guardian/models/user_model.dart';
-import 'package:ai_guardian/services/users_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:ai_guardian/services/guardians_service.dart';
 
 class GuardiansScreen extends StatelessWidget {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String uid = FirebaseAuth.instance.currentUser!.uid;
-  final UsersService _usersService = UsersService(FirebaseFirestore.instance);
+  final GuardiansService _guardiansService = GuardiansService(
+    FirebaseFirestore.instance,
+  );
 
   Future<void> _removeGuardian(String guardianId) async {
-    await _firestore.collection('users').doc(uid).update({
-      'guardians': FieldValue.arrayRemove([guardianId]),
-    });
+    await _guardiansService.removeGuardian(uid, guardianId);
   }
 
   Future<void> _acceptRequest(
@@ -21,18 +20,11 @@ class GuardiansScreen extends StatelessWidget {
     String requestId,
     String guardianId,
   ) async {
-    await _firestore.collection('users').doc(uid).update({
-      'guardians': switch (action) {
-        'add' => FieldValue.arrayUnion([guardianId]),
-        'remove' => FieldValue.arrayRemove([guardianId]),
-        _ => throw 'Invalid action: $action',
-      },
-    });
-    await _firestore.collection('requests').doc(requestId).delete();
+    await _guardiansService.acceptRequest(uid, action, requestId, guardianId);
   }
 
   Future<void> _rejectRequest(String requestId) async {
-    await _firestore.collection('requests').doc(requestId).delete();
+    await _guardiansService.rejectRequest(requestId);
   }
 
   @override
@@ -42,15 +34,15 @@ class GuardiansScreen extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: StreamBuilder<UserModel?>(
-              stream: _usersService.user(uid),
+            child: StreamBuilder<List<String>>(
+              stream: _guardiansService.guardiansStream(uid),
               builder: (context, snapshot) {
-                if (!snapshot.hasData || snapshot.data == null || snapshot.data!.guardians == null || snapshot.data!.guardians!.isEmpty) {
+                if (!snapshot.hasData ||
+                    snapshot.data == null ||
+                    snapshot.data!.isEmpty) {
                   return Center(child: Text('No guardians'));
                 }
-                var userData = snapshot.data!;
-                List<String> guardians = userData.guardians ?? [];
-
+                List<String> guardians = snapshot.data!;
                 return ListView(
                   children:
                       guardians.map((guardianId) {
@@ -64,8 +56,8 @@ class GuardiansScreen extends StatelessWidget {
                             if (!snapshot.hasData) return SizedBox();
                             var guardianData = snapshot.data!;
                             return ListTile(
-                              title: Text(guardianData['name']),
-                              subtitle: Text(guardianData['email']),
+                              title: Text(guardianData['name'] ?? ''),
+                              subtitle: Text(guardianData['email'] ?? ''),
                               trailing: IconButton(
                                 icon: Icon(Icons.remove_circle),
                                 onPressed: () => _removeGuardian(guardianId),
@@ -80,11 +72,7 @@ class GuardiansScreen extends StatelessWidget {
           ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream:
-                  _firestore
-                      .collection('requests')
-                      .where('valoraId', isEqualTo: uid)
-                      .snapshots(),
+              stream: _guardiansService.requestsStream(uid),
               builder: (context, snapshot) {
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return Center(child: Text('No requests'));
@@ -93,8 +81,8 @@ class GuardiansScreen extends StatelessWidget {
                   children:
                       snapshot.data!.docs.map((doc) {
                         return ListTile(
-                          title: Text(doc['guardianId']),
-                          subtitle: Text(doc['action']),
+                          title: Text(doc['guardianId'] ?? ''),
+                          subtitle: Text(doc['action'] ?? ''),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [

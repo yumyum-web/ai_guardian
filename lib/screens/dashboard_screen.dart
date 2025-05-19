@@ -7,6 +7,7 @@ import 'package:ai_guardian/screens/safe_zones_screen.dart';
 import 'package:ai_guardian/screens/valoras_screen.dart';
 import 'package:ai_guardian/screens/sos_screen.dart';
 import 'package:ai_guardian/screens/chat_bot_screen.dart';
+import 'package:ai_guardian/screens/support_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
 import 'package:ai_guardian/services/geolocation_service.dart';
 import 'package:ai_guardian/services/location_service.dart';
@@ -170,7 +171,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       DashboardTile(
         image: 'assets/images/dashboard_support.png',
         label: "Support",
-        onTap: () {},
+        onTap: _goToSupport,
       ),
       DashboardTile(
         image: 'assets/images/dashboard_safe_zones.png',
@@ -290,6 +291,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
               geminiApiKey: 'AIzaSyD1It8LOJvn4JDC0U6KjJvKXQ4zVBDMqSg',
             ),
       ),
+    );
+  }
+
+  void _goToSupport() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const SupportScreen()),
     );
   }
 }

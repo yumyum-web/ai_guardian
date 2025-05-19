@@ -148,7 +148,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       DashboardTile(
         image: 'assets/images/dashboard_track_me.png',
-        label: "Track Me (Advanced)",
+        label: "Track Me",
         bgColor: _isSharingLocation ? Colors.green : null,
         textColor: _isSharingLocation ? Colors.white : null,
         onTap: () {

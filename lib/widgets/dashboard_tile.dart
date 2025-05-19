@@ -35,13 +35,13 @@ class DashboardTile extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(image, width: 100),
+            Image.asset(image, width: 60),
             SizedBox(height: 10),
             Text(
               label,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 10,
                 fontWeight: FontWeight.bold,
                 color: textColor,
               ),

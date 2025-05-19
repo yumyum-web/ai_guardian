@@ -4,6 +4,7 @@ import 'package:ai_guardian/services/sos_service.dart';
 import 'package:ai_guardian/services/location_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ai_guardian/services/voice_recording_service.dart';
 
 class SOSScreen extends StatefulWidget {
   const SOSScreen({super.key});
@@ -40,6 +41,7 @@ class _SOSScreenState extends State<SOSScreen> {
     if (authenticated) {
       await _sosService.stopSOS();
       _locationService.stopSharing();
+      await VoiceRecordingService().stopRecording();
       _popScreen();
     }
   }
@@ -82,6 +84,26 @@ class _SOSScreenState extends State<SOSScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                   softWrap: true,
+                ),
+                StreamBuilder<bool>(
+                  stream: VoiceRecordingService().isRecordingStream,
+                  builder: (context, snapshot) {
+                    final isRecording = snapshot.data ?? false;
+                    return OutlinedButton.icon(
+                      onPressed:
+                          isRecording
+                              ? null
+                              : VoiceRecordingService().startRecording,
+                      icon: Icon(Icons.mic),
+                      label: Text(
+                        isRecording ? 'Recording' : 'Start Recording',
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: isRecording ? Colors.grey : Colors.red,
+                        foregroundColor: Colors.white,
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

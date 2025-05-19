@@ -31,6 +31,9 @@ dependencies:
   http: ^1.4.0
   flutter_gemini: ^3.0.0
   url_launcher: ^6.2.5
+  record: ^6.0.0
+  path_provider: ^2.1.2
+  audioplayers: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -60,3 +63,4 @@ flutter:
     - assets/images/lobby_carousel_3.png
     - assets/images/marker.png
     - assets/images/dashboard_safe_zones.png
+    - assets/images/dashboard_recordings.png

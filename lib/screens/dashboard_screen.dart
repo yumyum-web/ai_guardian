@@ -8,6 +8,7 @@ import 'package:ai_guardian/screens/valoras_screen.dart';
 import 'package:ai_guardian/screens/sos_screen.dart';
 import 'package:ai_guardian/screens/chat_bot_screen.dart';
 import 'package:ai_guardian/screens/support_screen.dart';
+import 'package:ai_guardian/screens/voice_recordings_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
 import 'package:ai_guardian/services/geolocation_service.dart';
 import 'package:ai_guardian/services/location_service.dart';
@@ -178,6 +179,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         label: "Safe Zones",
         onTap: _goToSafeZones,
       ),
+      DashboardTile(
+        image: 'assets/images/dashboard_recordings.png',
+        label: "Voice Recordings",
+        onTap: _goToVoiceRecordings,
+      ),
     ];
   }
 
@@ -298,6 +304,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const SupportScreen()),
+    );
+  }
+
+  void _goToVoiceRecordings() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const VoiceRecordingsScreen()),
     );
   }
 }

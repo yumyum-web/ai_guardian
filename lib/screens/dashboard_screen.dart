@@ -3,9 +3,11 @@ import 'package:ai_guardian/screens/guardians_screen.dart';
 import 'package:ai_guardian/screens/locations_screen.dart';
 import 'package:ai_guardian/screens/login_screen.dart';
 import 'package:ai_guardian/screens/safe_shaker_screen.dart';
+import 'package:ai_guardian/screens/safe_zones_screen.dart';
 import 'package:ai_guardian/screens/valoras_screen.dart';
 import 'package:ai_guardian/screens/sos_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
+import 'package:ai_guardian/services/geolocation_service.dart';
 import 'package:ai_guardian/services/location_service.dart';
 import 'package:ai_guardian/services/users_service.dart';
 import 'package:ai_guardian/services/sos_service.dart';
@@ -26,6 +28,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final LocationService _locationService = LocationService(
     FirebaseFirestore.instance,
     FirebaseAuth.instance,
+    GeolocationService(),
   );
   final SOSService _sosService = SOSService();
   User? user;
@@ -168,6 +171,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         label: "Support",
         onTap: () {},
       ),
+      DashboardTile(
+        image: 'assets/images/dashboard_safe_zones.png',
+        label: "Safe Zones",
+        onTap: _goToSafeZones,
+      ),
     ];
   }
 
@@ -262,6 +270,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const SafeShakerScreen()),
+    );
+  }
+
+  void _goToSafeZones() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const SafeZonesScreen()),
     );
   }
 }

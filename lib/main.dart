@@ -1,5 +1,6 @@
 import 'package:ai_guardian/firebase_options.dart';
 import 'package:ai_guardian/screens/splash_screen.dart';
+import 'package:ai_guardian/services/geolocation_service.dart';
 import 'package:ai_guardian/services/location_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -71,9 +72,11 @@ Future<void> backgroundUpdateCurrentPosition(String eventName) async {
 
 Future<void> backgroundUpdatePosition(bg.Location location) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  GeolocationService geolocationService = GeolocationService();
   LocationService locationService = LocationService(
     FirebaseFirestore.instance,
     FirebaseAuth.instance,
+    geolocationService,
   );
 
   try {

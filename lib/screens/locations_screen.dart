@@ -1,5 +1,6 @@
 import 'package:ai_guardian/models/user_model.dart';
 import 'package:ai_guardian/services/auth_service.dart';
+import 'package:ai_guardian/services/geolocation_service.dart';
 import 'package:ai_guardian/services/location_service.dart';
 import 'package:ai_guardian/services/users_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,6 +20,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
   final LocationService _locationService = LocationService(
     FirebaseFirestore.instance,
     FirebaseAuth.instance,
+    GeolocationService(),
   );
   List<UserModel> valoras = [];
   Set<Marker> markers = {};

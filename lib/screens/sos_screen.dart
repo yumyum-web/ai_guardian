@@ -1,3 +1,4 @@
+import 'package:ai_guardian/services/geolocation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:ai_guardian/services/sos_service.dart';
 import 'package:ai_guardian/services/location_service.dart';
@@ -14,21 +15,24 @@ class SOSScreen extends StatefulWidget {
 class _SOSScreenState extends State<SOSScreen> {
   late SOSService _sosService;
   late LocationService _locationService;
+  late GeolocationService _geolocationService;
 
   @override
   void initState() {
     super.initState();
     _sosService = SOSService();
+    _geolocationService = GeolocationService();
     _locationService = LocationService(
       FirebaseFirestore.instance,
       FirebaseAuth.instance,
+      _geolocationService,
     );
     _startSOS();
   }
 
   Future<void> _startSOS() async {
     await _sosService.startSOS();
-    await _locationService.startSharing();
+    _locationService.startSharing();
   }
 
   Future<void> _stopSOS() async {

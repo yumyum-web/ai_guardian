@@ -28,6 +28,7 @@ dependencies:
   flutter_background_geolocation: ^4.16.9
   local_auth: ^2.3.0
   shake_gesture: ^1.2.0
+  http: ^1.4.0
 
 dev_dependencies:
   flutter_test:
@@ -56,3 +57,4 @@ flutter:
     - assets/images/lobby_carousel_2.png
     - assets/images/lobby_carousel_3.png
     - assets/images/marker.png
+    - assets/images/dashboard_safe_zones.png

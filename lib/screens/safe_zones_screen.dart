@@ -32,7 +32,13 @@ class _SafeZonesScreenState extends State<SafeZonesScreen> {
     _safeZonesService = SafeZonesService(_geolocationService);
     _location =
         LocationService(_firestore, _auth, _geolocationService).selfLocation();
-    _fetchZones();
+    _fetchZones()
+        .then((_) {
+          _safeZonesService.updateGeofences();
+        })
+        .catchError((error) {
+          print('Error fetching zones: $error');
+        });
   }
 
   Future<void> _fetchZones() async {

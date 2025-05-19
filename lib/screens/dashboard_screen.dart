@@ -6,6 +6,7 @@ import 'package:ai_guardian/screens/safe_shaker_screen.dart';
 import 'package:ai_guardian/screens/safe_zones_screen.dart';
 import 'package:ai_guardian/screens/valoras_screen.dart';
 import 'package:ai_guardian/screens/sos_screen.dart';
+import 'package:ai_guardian/screens/chat_bot_screen.dart';
 import 'package:ai_guardian/services/auth_service.dart';
 import 'package:ai_guardian/services/geolocation_service.dart';
 import 'package:ai_guardian/services/location_service.dart';
@@ -136,7 +137,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       DashboardTile(
         image: 'assets/images/dashboard_help_bot.png',
         label: "Help Bot",
-        onTap: () {},
+        onTap: _goToChatBot,
       ),
       DashboardTile(
         image: 'assets/images/dashboard_safe_shaker.png',
@@ -277,6 +278,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const SafeZonesScreen()),
+    );
+  }
+
+  void _goToChatBot() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (_) => ChatBotScreen(
+              geminiApiKey: 'AIzaSyD1It8LOJvn4JDC0U6KjJvKXQ4zVBDMqSg',
+            ),
+      ),
     );
   }
 }

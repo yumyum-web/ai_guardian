@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LobbyScreen extends StatefulWidget {
   @override
@@ -21,9 +22,21 @@ class _LobbyScreenState extends State<LobbyScreen> {
     "You are a beacon of hope. You are a light in the darkness!",
   ];
   final carouselItems = [
-    ('assets/images/lobby_carousel_1.png', 'You are strong'),
-    ('assets/images/lobby_carousel_2.png', 'You are brave'),
-    ('assets/images/lobby_carousel_3.png', 'You are loved'),
+    (
+      'assets/images/lobby_carousel_1.png',
+      'You are strong',
+      'https://martialwaydojo.com/8-self-defense-moves-every-woman-needs-to-know/',
+    ),
+    (
+      'assets/images/lobby_carousel_2.png',
+      'You are brave',
+      'https://www.dailymirror.lk/print/other/International-Womens-Day-2024-Inspiring-inclusion/117-278439',
+    ),
+    (
+      'assets/images/lobby_carousel_3.png',
+      'You are loved',
+      'https://www.unwomen.org/en/what-we-do/ending-violence-against-women',
+    ),
   ];
 
   @override
@@ -180,36 +193,51 @@ class _LobbyScreenState extends State<LobbyScreen> {
                           carouselItems.map((item) {
                             return Builder(
                               builder: (BuildContext context) {
-                                return Stack(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(40),
-                                      child: Image.asset(
-                                        item.$1,
-                                        fit: BoxFit.cover,
-                                        width: 300,
-                                        height: 175,
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.all(10),
-                                      alignment: Alignment.bottomCenter,
-                                      child: Text(
-                                        item.$2,
-                                        style: TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                          shadows: [
-                                            Shadow(
-                                              blurRadius: 10,
-                                              color: Colors.black,
-                                            ),
-                                          ],
+                                return GestureDetector(
+                                  onTap: () async {
+                                    final url = Uri.parse(item.$3);
+                                    try {
+                                      if (!await launchUrl(
+                                        url,
+                                        mode: LaunchMode.externalApplication,
+                                      )) {
+                                        _showError('Could not open the link.');
+                                      }
+                                    } catch (e) {
+                                      _showError('Error: $e');
+                                    }
+                                  },
+                                  child: Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(40),
+                                        child: Image.asset(
+                                          item.$1,
+                                          fit: BoxFit.cover,
+                                          width: 300,
+                                          height: 175,
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                      Container(
+                                        padding: EdgeInsets.all(10),
+                                        alignment: Alignment.bottomCenter,
+                                        child: Text(
+                                          item.$2,
+                                          style: TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                            shadows: [
+                                              Shadow(
+                                                blurRadius: 10,
+                                                color: Colors.black,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 );
                               },
                             );
@@ -266,6 +294,16 @@ class _LobbyScreenState extends State<LobbyScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => DashboardScreen()),
+    );
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message, style: TextStyle(color: Colors.white)),
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.red,
+      ),
     );
   }
 }

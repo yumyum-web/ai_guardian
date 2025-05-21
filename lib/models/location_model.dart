@@ -1,7 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class LocationModel {
-  final Timestamp timestamp;
+  final String timestamp;
   final double longitude;
   final double latitude;
 

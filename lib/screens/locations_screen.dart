@@ -56,7 +56,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
             infoWindow: InfoWindow(
               title: valora.name,
               snippet:
-                  'Last Updated: ${GetTimeAgo.parse(locationModel.timestamp.toDate())}',
+                  'Last Updated: ${GetTimeAgo.parse(DateTime.parse(locationModel.timestamp))}',
             ),
           );
           setState(() {

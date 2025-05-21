@@ -1,7 +1,9 @@
 import 'package:ai_guardian/firebase_options.dart';
 import 'package:ai_guardian/screens/splash_screen.dart';
+import 'package:ai_guardian/services/alert_service.dart';
 import 'package:ai_guardian/services/geolocation_service.dart';
 import 'package:ai_guardian/services/location_service.dart';
+import 'package:background_fetch/background_fetch.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -94,6 +96,8 @@ Future<void> backgroundUpdatePosition(bg.Location location) async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await AlertService().initialize();
+  BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
   runApp(MyApp());
 }
 
@@ -133,6 +137,28 @@ class _MyAppState extends State<MyApp> {
     ).then((bg.State state) {
       print('[ready] - $state');
     });
+
+    // Register background fetch for periodic SOS check
+    BackgroundFetch.configure(
+      BackgroundFetchConfig(
+        minimumFetchInterval: 15,
+        stopOnTerminate: false,
+        enableHeadless: true,
+        startOnBoot: true,
+        requiresBatteryNotLow: false,
+        requiresCharging: false,
+        requiresStorageNotLow: false,
+        requiresDeviceIdle: false,
+        requiredNetworkType: NetworkType.ANY,
+      ),
+      (String taskId) async {
+        await AlertService().checkSOSStatus();
+        BackgroundFetch.finish(taskId);
+      },
+      (String taskId) async {
+        BackgroundFetch.finish(taskId);
+      },
+    );
   }
 
   @override

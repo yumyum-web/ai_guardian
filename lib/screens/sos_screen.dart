@@ -28,7 +28,26 @@ class _SOSScreenState extends State<SOSScreen> {
       FirebaseAuth.instance,
       _geolocationService,
     );
+    _setSOSStatus(true);
     _startSOS();
+  }
+
+  Future<void> _setSOSStatus(bool active) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await FirebaseFirestore.instance.collection('sos').doc(user.uid).set({
+        'active': active,
+      }, SetOptions(merge: true));
+    }
+  }
+
+  Future<void> _removeSOSStatus() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await FirebaseFirestore.instance.collection('sos').doc(user.uid).set({
+        'active': false,
+      }, SetOptions(merge: true));
+    }
   }
 
   Future<void> _startSOS() async {
@@ -42,6 +61,7 @@ class _SOSScreenState extends State<SOSScreen> {
       await _sosService.stopSOS();
       _locationService.stopSharing();
       await VoiceRecordingService().stopRecording();
+      await _removeSOSStatus();
       _popScreen();
     }
   }

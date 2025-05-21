@@ -132,11 +132,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         onTap: _goToGuardians,
       ),
       DashboardTile(
-        image: 'assets/images/dashboard_emergency_sms.png',
-        label: "Emergency SMS",
-        onTap: () {},
-      ),
-      DashboardTile(
         image: 'assets/images/dashboard_help_bot.png',
         label: "Help Bot",
         onTap: _goToChatBot,
@@ -200,11 +195,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         image: 'assets/images/dashboard_family.png',
         label: "Valoras",
         onTap: _goToValoras,
-      ),
-      DashboardTile(
-        image: 'assets/images/dashboard_emergency_sms.png',
-        label: "Emergency SMS",
-        onTap: () {},
       ),
     ];
   }

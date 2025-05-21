@@ -1,9 +1,5 @@
-import 'package:ai_guardian/firebase_options.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:background_fetch/background_fetch.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class AlertService {
@@ -11,7 +7,26 @@ class AlertService {
   factory AlertService() => _instance;
   AlertService._internal();
 
+  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+
   Future<void> initialize() async {
+    // Request permissions for notifications
+    await _messaging.requestPermission();
+    // Optionally handle foreground messages
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (message.notification != null) {
+        AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            id: DateTime.now().millisecondsSinceEpoch.remainder(100000),
+            channelKey: 'sos_alerts',
+            title: message.notification?.title ?? '🚨 SOS Alert',
+            body: message.notification?.body ?? '',
+            notificationLayout: NotificationLayout.Default,
+          ),
+        );
+      }
+    });
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     AwesomeNotifications().initialize(null, [
       NotificationChannel(
         channelKey: 'sos_alerts',
@@ -27,47 +42,10 @@ class AlertService {
     }
   }
 
-  Future<void> showSOSAlert(String message) async {
-    await AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: DateTime.now().millisecondsSinceEpoch.remainder(100000),
-        channelKey: 'sos_alerts',
-        title: '🚨 SOS Alert',
-        body: message,
-        notificationLayout: NotificationLayout.Default,
-      ),
-    );
-  }
-
-  // Polls Firestore for SOS status and triggers notification if active
-  Future<void> checkSOSStatus() async {
-    final user = FirebaseAuth.instance.currentUser;
-    print(user);
-    if (user == null) return;
-    final uid = user.uid;
-    final valoras =
-        await FirebaseFirestore.instance
-            .collection('users')
-            .where('guardians', arrayContains: uid)
-            .get();
-    for (var valora in valoras.docs) {
-      final doc =
-          await FirebaseFirestore.instance
-              .collection('sos')
-              .doc(valora.id)
-              .get();
-      if (doc.exists && doc.data()?['active'] == true) {
-        await showSOSAlert('${valora.data()['name']} is in SOS mode!');
-      }
-    }
+  Future<String?> getFcmToken() async {
+    return await _messaging.getToken();
   }
 }
 
-// Background fetch task
 @pragma('vm:entry-point')
-void backgroundFetchHeadlessTask(String taskId) async {
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await AlertService().initialize();
-  await AlertService().checkSOSStatus();
-  BackgroundFetch.finish(taskId);
-}
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {}

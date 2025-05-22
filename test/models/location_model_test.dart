@@ -1,12 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ai_guardian/models/location_model.dart';
 
 void main() {
   group('LocationModel tests', () {
     test('creates instance from valid map', () {
       final map = {
-        'timestamp': Timestamp.now(),
+        'timestamp': DateTime.now().toIso8601String(),
         'longitude': 12.34,
         'latitude': 56.78,
       };
@@ -25,7 +24,7 @@ void main() {
     });
 
     test('converts instance to valid map', () {
-      final timestamp = Timestamp.now();
+      final timestamp = DateTime.now().toIso8601String();
       final location = LocationModel(
         timestamp: timestamp,
         longitude: 12.34,
